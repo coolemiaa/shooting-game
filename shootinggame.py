@@ -10,12 +10,12 @@ score=0
 speed=5
 bug=Actor('bug')
 bug.pos=(random.randint(50,750),-50)
-enemies.append('bug')
+enemies.append(bug)
 def on_key_down(key):
     if key==keys.SPACE:
         bullet=Actor('bullet')
         bullet.pos=(ship.x,ship.y-40)
-        bullets.append('bullet')
+        bullets.append(bullet)
 def update():
     global score
     if keyboard.left:
@@ -34,7 +34,7 @@ def update():
             enemy.x=(random.randint(50,750))
         for bullet in bullets:
             if enemy.colliderect(bullet):
-                bullet.remove(bullet)
+                bullets.remove(bullet)
                 enemy.y=-50
                 enemy.x=(random.randint(50,750))
                 score=score+10
@@ -51,4 +51,5 @@ pgzrun.go()
     
       
 
+    
     
