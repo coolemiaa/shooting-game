@@ -8,20 +8,25 @@ bullets=[]
 enemies=[]
 score=0
 speed=5
+ship.dead=False
 bug=Actor('bug')
-bug.pos=(random.randint(50,750),-50)
-enemies.append(bug)
+for i in range(1,6):
+    enemies.append(Actor("bug"))
+    enemies[-1].x=100+50*i
+    enemies[-1].y=50
 def on_key_down(key):
-    if key==keys.SPACE:
-        bullet=Actor('bullet')
-        bullet.pos=(ship.x,ship.y-40)
-        bullets.append(bullet)
+    if ship.dead==False:
+        if key==keys.SPACE:
+            bullet=Actor('bullet')
+            bullet.pos=(ship.x,ship.y-40)
+            bullets.append(bullet)
 def update():
     global score
-    if keyboard.left:
-        ship.x-=10
-    if keyboard.right:
-        ship.x+=10
+    if ship.dead==False:
+        if keyboard.left:
+            ship.x-=10
+        if keyboard.right:
+            ship.x+=10
     ship.x=max(0,min(WIDTH,ship.x))
     for bullet in bullets:
         bullet.y-=10
@@ -34,19 +39,29 @@ def update():
             enemy.x=(random.randint(50,750))
         for bullet in bullets:
             if enemy.colliderect(bullet):
+                sounds.bullet.play()
                 bullets.remove(bullet)
                 enemy.y=-50
                 enemy.x=(random.randint(50,750))
                 score=score+10
+        if enemy.colliderect(ship):
+            ship.dead=True
+def gameover():
+    if ship.dead==True:
+        screen.draw.text('GAMEOVER :(',center=(400,300),fontsize=70,color='red')
+        screen.draw.text('final score:{}'.format(score),center=(400,400),color='black',fontsize=50)
 def draw():
     screen.clear()
     screen.fill('pink')
-    ship.draw()
-    for bullet in bullets:
-        bullet.draw()
-    for enemy in enemies:
-        enemy.draw()
-    screen.draw.text('score:{}'.format(score),topleft=(20,20),color='black',fontsize=20)
+    if ship.dead==True:
+        gameover()
+    else:
+        ship.draw()
+        for bullet in bullets:
+            bullet.draw()
+        for enemy in enemies:
+            enemy.draw()
+        screen.draw.text('score:{}'.format(score),topleft=(20,20),color='black',fontsize=20)
 pgzrun.go()
     
       
